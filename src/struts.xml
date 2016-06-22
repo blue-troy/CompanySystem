@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd"
+        >
+
+<struts>
+    <constant name="struts.devMode" value="true"></constant><!--热部署-->
+    <package name="login" namespace="/user" extends="struts-default">
+        <action name="index">
+            <result>/index.jsp</result>
+        </action>
+        <action name="login" class="com.mycompany.blue.action.LoginAction" method="login">
+            <result>/index.jsp</result>
+            <result name="login">/login/login.jsp</result>
+            <result name="error">/login/login_error.jsp</result>
+        </action>
+        <action name="loginout" class="com.mycompany.blue.action.LoginAction" method="loginout">
+            <result>/index.jsp</result>
+            <result name="error">/login/login_error.jsp</result>
+        </action>
+    </package>
+
+    <package name="customer" namespace="/customer" extends="json-default">
+        <action name="index">
+            <result>/index.jsp</result>
+        </action>
+        <action name="*-*" class="com.mycompany.blue.action.{1}Action" method="{2}">
+            <result>/admin/{1}-{2}.jsp</result>
+            <result name="list">/index.jsp</result>
+            <result name="input">/admin/{1}-{2}.jsp</result>
+            <exception-mapping result="error" exception="java.sql.SQLException"/>
+            <result name="error">/error.jsp</result>
+            <!--<result name="input">/admin/{1}-{2}.jsp</result>
+            <exception-mapping result="error" exception="java.sql.SQLException" />
+            <result name="error">/error.jsp</result>&ndash;&gt;-->
+        </action>
+
+    </package>
+
+
+    <!--    <package name="exception" extends="struts-default">&lt;!&ndash;异常处理&ndash;&gt;
+            <global-results>
+                <result name="error">/error.jsp</result>
+            </global-results>
+
+            <global-exception-mappings>
+                <exception-mapping result="error" exception="java.lang.Exception"></exception-mapping>
+            </global-exception-mappings>
+        </package>
+
+        <package name="admin" namespace="/admin" extends="exception" >
+            <action name="index">
+                <result>/admin/index.html</result>
+            </action>
+            <action name="*-*" class="com.bjsxt.bbs2009.action.{1}Action" method="{2}">
+                <result>/admin/{1}-{2}.jsp</result>
+                <result name="input">/admin/{1}-{2}.jsp</result>
+                <exception-mapping result="error" exception="java.sql.SQLException" />
+                <result name="error">/error.jsp</result>
+            </action>
+        </package>
+
+        <package name="front" namespace="/" extends="struts-default" >
+            <default-action-ref name="Category-list" />
+            <action name="Category-list" class="com.bjsxt.bbs2009.action.CategoryAction" method="list">
+                <result>/index.jsp</result>
+            </action>
+        </package>-->
+    <package name="json-default" extends="struts-default">
+
+        <result-types>
+            <result-type name="json" class="org.apache.struts2.json.JSONResult"/>
+        </result-types>
+
+        <interceptors>
+            <interceptor name="json" class="org.apache.struts2.json.JSONInterceptor"/>
+            <interceptor name="jsonValidation" class="org.apache.struts2.json.JSONValidationInterceptor"/>
+
+            <!-- Sample JSON validation stack -->
+            <interceptor-stack name="jsonValidationWorkflowStack">
+                <interceptor-ref name="basicStack"/>
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">input,back,cancel</param>
+                </interceptor-ref>
+                <interceptor-ref name="jsonValidation"/>
+                <interceptor-ref name="workflow"/>
+            </interceptor-stack>
+
+        </interceptors>
+
+    </package>
+</struts>
